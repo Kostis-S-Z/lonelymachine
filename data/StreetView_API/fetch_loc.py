@@ -4,10 +4,13 @@ from sign_request import sign_url
 
 url = 'https://maps.googleapis.com/maps/api/streetview?'
 
-location_type = 'address'  # 'coordinates' , 'address'
+location_type = 'coordinates'  # 'coordinates' , 'address'
 
-input_file = 'athens.csv'
+# input_file = 'athens.csv'
+input_file = 'athens_random.csv'
 save_dir = 'streetviews/'
+
+n_addresses = 10
 
 size = '640x640'  # max is 640x640
 fov = '90'  # field of view
@@ -22,7 +25,7 @@ def main():
     for index, row in df.iterrows():
         location, filename = preprocess_location(index, row)
         construct_request(location, filename)
-        exit()
+        if index > n_addresses: break
 
 
 def preprocess_location(index, item):
