@@ -4,19 +4,21 @@ from sign_request import sign_url
 
 url = 'https://maps.googleapis.com/maps/api/streetview?'
 
-location_type = 'coordinates'  # 'coordinates' , 'address'
+location_type = 'address'  # 'coordinates' , 'address'
 
 # input_file = 'athens.csv'
-input_file = 'athens_random.csv'
-save_dir = 'streetviews/'
+input_file = 'athens.csv'
+save_dir = 'streetviews/test/'
 
-n_addresses = 10
+n_addresses = 1
 
 size = '640x640'  # max is 640x640
-fov = '90'  # field of view
-radius = '50'  # a radius in meters, in which to search for a panorama, centered on the given latitude and longitude.
-pitch = '0'  # specifies the up or down angle of the camera relative to the Street View vehicle
+fov = '120'  # [0-120]: horizontal field of view
+heading = '0'  # [0-360]: indicates the compass heading of the camera 0/360: North, 90: East, 180: South
+radius = '50'  # [0-?]: radius in meters, to search for a panorama, centered on the given latitude and longitude.
+pitch = '10'  # [-90, 90]: specifies the up or down angle of the camera relative to the Street View vehicle
 source = 'default'  # 'default' Street View default view, 'outdoor' limits searches to outdoor collections
+return_error_code = 'true'  # indicates whether the API should return an error code when no image is found
 
 
 def main():
@@ -25,7 +27,7 @@ def main():
     for index, row in df.iterrows():
         location, filename = preprocess_location(index, row)
         construct_request(location, filename)
-        if index > n_addresses: break
+        if index + 1 >= n_addresses: break
 
 
 def preprocess_location(index, item):
@@ -44,7 +46,8 @@ def preprocess_location(index, item):
 
 
 def construct_request(location, filename):
-    url_request = url + '&key=' + key + '&size=' + size + '&location=' + location + '&radius=' + radius
+    url_request = url + '&key=' + key + '&size=' + size + '&location=' + location + '&radius=' + radius + '&fov=' + fov\
+                  + '&heading=' + heading + '&return_error_code' + return_error_code
 
     signed_url = sign_url(input_url=url_request, secret=secret)
 
@@ -52,7 +55,6 @@ def construct_request(location, filename):
     ans = input('Yes? (y/n)')
     if ans == 'y':
         response = requests.get(signed_url)
-
         if response.ok:
             print('Success!')
             with open(save_dir + filename, 'wb') as file:
