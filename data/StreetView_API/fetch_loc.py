@@ -4,30 +4,29 @@ from sign_request import sign_url
 
 url = 'https://maps.googleapis.com/maps/api/streetview?'
 
-location_type = 'address'  # 'coordinates' , 'address'
+location_type = 'coordinates'  # 'coordinates' , 'address'
 
-# input_file = 'athens.csv'
-input_file = 'athens.csv'
-save_dir = 'streetviews/test/'
+input_file = 'athens_random.csv'
+save_dir = 'streetviews/'
 
-n_addresses = 1
+params_def = {
+    "n_addresses": 1,
+    "size": '640x640',  # max is 640x640
+    "fov": '120', # [0-120]: horizontal field of view
+    "heading": '0',  # [0-360]: indicates the compass heading of the camera 0/360: North, 90: East, 180: South
+    "radius": '50',  # [0-?]: radius in meters, to search for a panorama, centered on the given latitude and longitude.
+    "pitch": '10',  # [-90, 90]: specifies the up or down angle of the camera relative to the Street View vehicle
+    "source": 'default',  # 'default' Street View default view, 'outdoor' limits searches to outdoor collections
+    "return_error_code": 'true'  # indicates whether the API should return an error code when no image is found
+}
 
-size = '640x640'  # max is 640x640
-fov = '120'  # [0-120]: horizontal field of view
-heading = '0'  # [0-360]: indicates the compass heading of the camera 0/360: North, 90: East, 180: South
-radius = '50'  # [0-?]: radius in meters, to search for a panorama, centered on the given latitude and longitude.
-pitch = '10'  # [-90, 90]: specifies the up or down angle of the camera relative to the Street View vehicle
-source = 'default'  # 'default' Street View default view, 'outdoor' limits searches to outdoor collections
-return_error_code = 'true'  # indicates whether the API should return an error code when no image is found
-
-
-def main():
-    df = pd.read_csv(input_file)
+def fetch_photos(key, secret, file_path=input_file, params=params_def):
+    df = pd.read_csv(file_path)
 
     for index, row in df.iterrows():
         location, filename = preprocess_location(index, row)
-        construct_request(location, filename)
-        if index + 1 >= n_addresses: break
+        construct_request(location, filename, key, secret, params)
+        if index + 1 >= params['n_addresses']: break
 
 
 def preprocess_location(index, item):
@@ -45,9 +44,9 @@ def preprocess_location(index, item):
     return location, filename
 
 
-def construct_request(location, filename):
-    url_request = url + '&key=' + key + '&size=' + size + '&location=' + location + '&radius=' + radius + '&fov=' + fov\
-                  + '&heading=' + heading + '&return_error_code' + return_error_code
+def construct_request(location, filename, key, secret, params):
+    url_request = url + '&key=' + key + '&size=' + params['size'] + '&location=' + location + '&radius=' + params['radius'] + '&fov=' + params['fov'] \
+                  + '&heading=' + params['heading'] + '&return_error_code' + params['return_error_code']
 
     signed_url = sign_url(input_url=url_request, secret=secret)
 
@@ -69,8 +68,8 @@ if __name__ == "__main__":
     with open('../../../DONT_PUBLISH_ME') as f:
         for i, line in enumerate(f):
             if i == 2:
-                key = line.rstrip()
+                key_def = line.rstrip()
             if i == 4:
-                secret = line.rstrip()
+                secret_def = line.rstrip()
                 break
-    main()
+    fetch_photos(key_def, secret_def)
