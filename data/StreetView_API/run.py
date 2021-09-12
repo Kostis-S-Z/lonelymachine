@@ -51,7 +51,7 @@ def make_request(file_path):
 
     print("\nParameters are set:", params)
     print("\n\n\t ~Sending request!~ \n")
-    fetch_photos(key, secret, file_path)
+    fetch_photos(key, secret, file_path, params)
 
 if __name__ == "__main__":
     print("\n\t ~Welcome to the Street View Photographer~")
