@@ -18,6 +18,7 @@ params_def = {
 def create_file(params=params_def):
     methods = {'random': randomly_generate(params), 'even': evenly_generate(params)}
     latitudes, longitudes = methods[params['method']]
+    print(latitudes, longitudes)
     print(f'Generated {len(latitudes)} latitudes, {len(longitudes)} longitudes. '
         f'Creating {len(latitudes)*len(longitudes)} points.')
     locations = generate_coordinates(latitudes, longitudes)
@@ -25,6 +26,8 @@ def create_file(params=params_def):
     print(locs_df.shape)
     filename = f"athens_{params['method']}.csv"
     locs_df.to_csv(filename, index=False)
+    if not os.path.isdir('streetviews'):
+        os.mkdir('streetviews')
     return os.getcwd() + '/' + filename
 
 def evenly_generate(params):
@@ -34,15 +37,15 @@ def evenly_generate(params):
     lat_step_size = lat_range // n_points
     lon_step_size = lon_range // n_points
 
-    lats = np.arange(params['min_lat'], params['max_lat'], lat_step_size)
-    lons = np.arange(params['min_lon'], params['max_lon'], lon_step_size)
+    lats = np.arange(params['min_lat'], params['max_lat'], lat_step_size, int)
+    lons = np.arange(params['min_lon'], params['max_lon'], lon_step_size, int)
 
     return lats, lons
 
 
 def randomly_generate(params):
-    lats = np.random.uniform(params['min_lat'], params['max_lat'], int(params['n_locs'] ** 0.5))
-    lons = np.random.uniform(params['min_lon'], params['max_lon'], int(params['n_locs'] ** 0.5))
+    lats = np.random.randint(params['min_lat'], params['max_lat'], int(params['n_locs'] ** 0.5))
+    lons = np.random.randint(params['min_lon'], params['max_lon'], int(params['n_locs'] ** 0.5))
     return lats, lons
 
 
@@ -60,3 +63,6 @@ def generate_coordinates(lats, lons):
             locs['lat'].append(lat_i)
             locs['long'].append(lon_i)
     return locs
+
+if __name__ == "__main__":
+    create_file()
