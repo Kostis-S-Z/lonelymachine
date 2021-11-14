@@ -4,13 +4,13 @@ from fetch_loc import fetch_photos
 def generate_file():
     print("Please input the bounding box coordinates, without any dots or commas and press Enter.")
     params = {}
-    params['min_lat'] = int(input("\t 1st corner:"))
-    params['max_lat'] = int(input("\t 2nd corner:"))
-    params['min_lon'] = int(input("\t 3rd corner:"))
-    params['max_lon'] = int(input("\t 4th corner:"))
+    params['min_lat'] = int(input("\t Minimum Latitude (South Limit):").replace('.', ''))
+    params['max_lat'] = int(input("\t Maximum Latitude (North Limit):").replace('.', ''))
+    params['min_lon'] = int(input("\t Minimum Longtitude (West limit):").replace('.', ''))
+    params['max_lon'] = int(input("\t Maximum Longtitude (East Limit):").replace('.', ''))
     while True:
-        print("Please input the number 1 for random method or 2 for even method.")
-        ans = int(input('\t Method:'))
+        print("Please input the number 1 for random method or 2 for even method. Default is random")
+        ans = int(input('\t Method:') or '1')
         if ans == 1:
             params['method'] = 'random'
             break
@@ -19,8 +19,8 @@ def generate_file():
             break
         else:
             pass
-    print("Please input the number of coordinates you want to generate. E.g 1,10,100")
-    params['n_locs'] = int(input("\t Number of locations:"))
+    print("Please input the number of coordinates you want to generate. E.g 1,10,100. Default is 10")
+    params['n_locs'] = int(input("\t Number of locations:") or '10')
     file_path = create_file(params)
     print("File created: ", file_path)
     return file_path
