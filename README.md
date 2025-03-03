@@ -17,7 +17,7 @@ TL;DR this bot can:
 
 ## Start here...
 
-[![Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github.com/Kostis-S-Z/lonelymachine/blob/main/notebook.ipynb) 
+[![Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Kostis-S-Z/lonelymachine/blob/main/notebook.ipynb) 
 
 ## Or here...
 
