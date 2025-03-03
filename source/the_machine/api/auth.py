@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-""" Signs a URL using a URL signing secret """
+# Sourced from : https://developers.google.com/maps/digital-signature
+"""Signs a URL using a URL signing secret"""
 
 import hashlib
 import hmac
@@ -9,19 +10,19 @@ import urllib.parse as urlparse
 
 
 def sign_url(input_url=None, secret=None):
-    """ Sign a request URL with a URL signing secret.
-      Usage:
-      from urlsigner import sign_url
-      signed_url = sign_url(input_url=my_url, secret=SECRET)
-      Args:
-      input_url - The URL to sign
-      secret    - Your URL signing secret
-      Returns:
-      The signed request URL
-  """
+    """Sign a request URL with a URL signing secret.
+    Usage:
+    from urlsigner import sign_url
+    signed_url = sign_url(input_url=my_url, secret=SECRET)
+    Args:
+    input_url - The URL to sign
+    secret    - Your URL signing secret
+    Returns:
+    The signed request URL
+    """
 
     if not input_url or not secret:
-        raise Exception("Both input_url and secret are required")
+        raise ValueError("Both input_url and secret are required")
 
     url = urlparse.urlparse(input_url)
 
@@ -43,10 +44,3 @@ def sign_url(input_url=None, secret=None):
 
     # Return signed URL
     return original_url + "&signature=" + encoded_signature.decode()
-
-
-if __name__ == "__main__":
-    input_url = input("URL to Sign: ")
-    secret = input("URL signing secret: ")
-    print("Signed URL: " + sign_url(input_url, secret)[0])
-
