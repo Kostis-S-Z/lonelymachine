@@ -17,6 +17,10 @@ TL;DR this bot can:
 
 ## Start here...
 
+[![Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github.com/Kostis-S-Z/lonelymachine/blob/main/notebook.ipynb) 
+
+## Or here...
+
 1. In your terminal, clone the repository:
 ```
 git clone https://github.com/Kostis-S-Z/lonelymachine.git
@@ -36,9 +40,9 @@ pip install -r requirements.txt
 
 <div style="text-align: center;">
 
-| auto\_run (minimal human involvement) | interact\_run (human-in-the-loop)  | notebook (human-in-the-loop + minimal Graphical Interface)                                                                                                        |
-|---------------------------------------|------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `python -m source.auto_run`           | `python -m source.interact_run.py` | [![Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github.com/Kostis-S-Z/lonelymachine/notebook.ipynb) |
+| auto\_run (minimal human involvement) | interact\_run (human-in-the-loop)  |
+|---------------------------------------|------------------------------------|
+| `python -m source.auto_run`           | `python -m source.interact_run.py` |
 
 </div>
 
