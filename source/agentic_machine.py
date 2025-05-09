@@ -1,4 +1,5 @@
 import argparse
+import json
 import uuid
 from datetime import datetime
 from pathlib import Path
@@ -13,9 +14,12 @@ from source.the_machine.api.client import get_credentials
 
 # Define the Street View agent
 def init_street_view_agent(
-    instructions: str = "You are a lonely machine that wanders the digital streets of the world.", framework: str = "openai", model: str = "gpt-4.1-nano", use_web: bool = False
+    instructions: str = "You are a lonely machine that wanders the digital streets of the world.",
+    framework: str = "openai",
+    model: str = "gpt-4.1-nano",
+    use_web: bool = False,
 ) -> AnyAgent:
-    tools = [fetch_image_from_street_view]
+    tools = [get_area_details_from_name, fetch_image_from_street_view]
     if use_web:
         tools += [search_web, visit_webpage]
     return AnyAgent.create(
@@ -28,7 +32,51 @@ def init_street_view_agent(
     )
 
 
-# Define the Tool for the agent
+# Define the tools for the agent
+def get_area_details_from_name(area_name: str) -> list[dict]:
+    """
+    Get details of an area based on a place name using
+    the [Nominatim API](https://nominatim.org/release-docs/develop/api/Search/).
+
+    Args:
+        area_name (str): The name of the area.
+
+    Returns:
+        dict: a list of dictionaries containing details about the area, including its latitude and longitude.
+
+    Examples:
+        {
+            "addresstype": "town",
+            "boundingbox": [
+                "38.0076080",
+                "38.0876080",
+                "23.4948663",
+                "23.5748663"
+            ],
+            "class": "place",
+            "display_name": "Elefsina",
+            "importance": 0.5708337975898039,
+            "lat": "38.0476080",
+            "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+            "lon": "23.5348663",
+            "name": "\u0395\u03bb\u03b5\u03c5\u03c3\u03af\u03bd\u03b1",
+            "osm_id": 26490651,
+            "osm_type": "node",
+            "place_id": 49761935,
+            "place_rank": 18,
+            "type": "town"
+        }
+    """
+    response = requests.get(
+        f"https://nominatim.openstreetmap.org/search?q={area_name}&format=json",
+        headers={"User-Agent": "Mozilla/5.0"},
+    )
+    response.raise_for_status()
+    response_json = json.loads(response.content.decode())
+
+    return response_json
+
+
 def fetch_image_from_street_view(
     coordinates: str, size: str, fov: int, heading: int, radius: int
 ) -> str:
@@ -73,7 +121,9 @@ def fetch_image_from_street_view(
             file.write(response.content)
         return str(full_path)  # Return the full path
     else:
-        raise ValueError(f"Error when fetching image: {response.status_code} - {response.text}")
+        raise ValueError(
+            f"Error when fetching image: {response.status_code} - {response.text}"
+        )
 
 
 if __name__ == "__main__":
@@ -86,6 +136,10 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
+
+    r = get_area_details_from_name("elefsina")
+    print(r)
+    exit()
 
     agent = init_street_view_agent()
     agent_trace = agent.run(args.prompt)
