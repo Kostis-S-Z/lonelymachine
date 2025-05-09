@@ -1,4 +1,5 @@
 *.csv
+the_photos/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
