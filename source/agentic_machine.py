@@ -3,6 +3,8 @@ from pathlib import Path
 
 from any_agent import AgentConfig, AnyAgent
 import requests
+
+from source.the_machine.api.auth import sign_url
 from source.the_machine.api.client import get_credentials
 
 
@@ -41,7 +43,7 @@ def fetch_image_from_street_view(location: str, size: str, fov: int, heading: in
         radius (int): Search radius in meters.
 
     Returns:
-        str: Path to the saved image file.
+        str: Path to the saved image file or error message
     """
     key, secret = get_credentials()
 
@@ -49,24 +51,25 @@ def fetch_image_from_street_view(location: str, size: str, fov: int, heading: in
     output_path.mkdir(parents=True, exist_ok=True)
 
     base_url = "https://maps.googleapis.com/maps/api/streetview"
-    params = {
-        "location": location,
-        "size": size,
-        "fov": fov,
-        "heading": heading,
-        "pitch": pitch,
-        "radius": radius,
-        "key": key,
-    }
-    response = requests.get(base_url, params=params)
+    url_request = (
+        f"{base_url}?key={key}&size={size}"
+        f"&location={location}&radius={radius}&fov={fov}"
+        f"&heading={heading}&return_error_code=true"
+    )
+
+    signed_url = sign_url(input_url=url_request, secret=secret)
+
+    response = requests.get(signed_url)
+
     if response.status_code == 200:
         location = location.replace(",", "_").replace(".", "_")
         filename = f"streetview_{location}.jpg"
-        with open(output_path / filename, "wb") as file:
+        full_path = output_path / filename
+        with open(full_path, "wb") as file:
             file.write(response.content)
-        return f"Image saved: {filename}"
+        return str(full_path)  # Return the full path
     else:
-        return f"Failed to fetch image: {response.status_code} - {response.text}"
+        return f"Error when fetching image: {response.status_code} - {response.text}"
 
 
 
