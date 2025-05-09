@@ -1,40 +1,31 @@
 import os
 from pathlib import Path
-import configparser
 import pandas as pd
 import requests
 from ..config import (
-    API_KEY_ENV,
-    API_SECRET_ENV,
-    DEFAULT_CONFIG_FILE,
     DEFAULT_SAVE_DIR,
     STREETVIEW_API_URL,
     DEFAULT_API_PARAMS,
 )
 from .auth import sign_url
 from ..locations.processor import preprocess_location
+from dotenv import load_dotenv
 
-
-def _get_credentials():
+def get_credentials():
     """
-    Retrieve API credentials from environment variables or a configuration file.
+    Retrieve API credentials from environment variables.
 
     Returns:
         tuple: (api_key, api_secret) if available, otherwise (None, None)
     """
-    key = os.environ.get(API_KEY_ENV)
-    secret = os.environ.get(API_SECRET_ENV)
+    load_dotenv()
+    key = os.environ.get("STREET_VIEW_API_KEY")
+    secret = os.environ.get("STREET_VIEW_API_SECRET")
 
-    if key and secret:
-        return key, secret
+    if not key or not secret:
+        raise ValueError("Credentials not available. Add your credentials in the .env file.")
+    return key, secret
 
-    if os.path.exists(DEFAULT_CONFIG_FILE):
-        config = configparser.ConfigParser()
-        config.read(DEFAULT_CONFIG_FILE)
-        if "credentials" in config:
-            return config["credentials"].get("key"), config["credentials"].get("secret")
-
-    return None, None
 
 
 def fetch_image_from_location(
@@ -89,10 +80,7 @@ def fetch_images(
         params (dict, optional): API parameters for the request; defaults to DEFAULT_API_PARAMS.
         save_dir (str): The directory where the fetched images will be saved.
     """
-    key, secret = _get_credentials()
-    if not key or not secret:
-        print("Credentials not available. Set environment variables or update config.")
-        return
+    key, secret = get_credentials()
 
     Path.mkdir(Path(save_dir), parents=True, exist_ok=True)
 
