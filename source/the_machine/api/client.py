@@ -11,6 +11,7 @@ from .auth import sign_url
 from ..locations.processor import preprocess_location
 from dotenv import load_dotenv
 
+
 def get_credentials():
     """
     Retrieve API credentials from environment variables.
@@ -23,9 +24,10 @@ def get_credentials():
     secret = os.environ.get("STREET_VIEW_API_SECRET")
 
     if not key or not secret:
-        raise ValueError("Credentials not available. Add your credentials in the .env file.")
+        raise ValueError(
+            "Credentials not available. Add your credentials in the .env file."
+        )
     return key, secret
-
 
 
 def fetch_image_from_location(

@@ -9,28 +9,32 @@ from source.the_machine.api.client import get_credentials
 
 
 # Define the Street View agent
-def init_street_view_agent(framework: str = "openai", model: str = "gpt-4.1-nano") -> AnyAgent:
+def init_street_view_agent(
+    framework: str = "openai", model: str = "gpt-4.1-nano"
+) -> AnyAgent:
     return AnyAgent.create(
         agent_framework=framework,
         agent_config=AgentConfig(
             model_id=model,
             instructions="You are an agent that fetches images from Google Street View API. The user will provide a "
-                         "location and you will have to first find the coordinates of that location in the format "
-                         "XX.XXXXXX, YY.YYYYYY (for example 38.059576,23.737887) and then fetch an image from the "
-                         "Google Street View API. If the user asks for multiple photos from multiple place the you "
-                         "will return more than one image, for each one of the places. "
-                         "If the user asks for certain parameters, you will have to "
-                         "use them. If the user does not provide any parameters you will have to use the default ones. "
-                         "The default parameters are: size=640x640, fov=120, heading=0, pitch=10, radius=50."
-                         "If there is an error in the request, you will return the error code and the error message"
-                         "and explicitly say there was an error.",
+            "location and you will have to first find the coordinates of that location in the format "
+            "XX.XXXXXX, YY.YYYYYY (for example 38.059576,23.737887) and then fetch an image from the "
+            "Google Street View API. If the user asks for multiple photos from multiple place the you "
+            "will return more than one image, for each one of the places. "
+            "If the user asks for certain parameters, you will have to "
+            "use them. If the user does not provide any parameters you will have to use the default ones. "
+            "The default parameters are: size=640x640, fov=120, heading=0, pitch=10, radius=50."
+            "If there is an error in the request, you will return the error code and the error message"
+            "and explicitly say there was an error.",
             tools=[fetch_image_from_street_view],
         ),
     )
 
 
 # Define the Tool for the agent
-def fetch_image_from_street_view(location: str, size: str, fov: int, heading: int, pitch: int, radius: int) -> str:
+def fetch_image_from_street_view(
+    location: str, size: str, fov: int, heading: int, pitch: int, radius: int
+) -> str:
     """
     Fetch an image from the Google Street View API.
 
@@ -70,7 +74,6 @@ def fetch_image_from_street_view(location: str, size: str, fov: int, heading: in
         return str(full_path)  # Return the full path
     else:
         return f"Error when fetching image: {response.status_code} - {response.text}"
-
 
 
 if __name__ == "__main__":
