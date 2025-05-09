@@ -93,6 +93,7 @@ def fetch_images(
 
     df = pd.read_csv(input_file)
 
+    photo_paths = []
     for index, row in df.iterrows():
         location, filename = preprocess_location(index, row)
         fetch_image_from_location(
@@ -103,5 +104,8 @@ def fetch_images(
             filename=os.path.join(save_dir, filename),
             manual_check=manual_check
         )
+        photo_paths.append(filename)
         if index + 1 >= params.get("n_addresses", 1):
             break
+
+    return photo_paths
