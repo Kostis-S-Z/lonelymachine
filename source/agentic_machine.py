@@ -19,7 +19,9 @@ def init_street_view_agent(framework: str = "openai", model: str = "gpt-4.1-nano
                          "will return more than one image, for each one of the places. "
                          "If the user asks for certain parameters, you will have to "
                          "use them. If the user does not provide any parameters you will have to use the default ones. "
-                         "The default parameters are: size=640x640, fov=120, heading=0, pitch=10, radius=50.",
+                         "The default parameters are: size=640x640, fov=120, heading=0, pitch=10, radius=50."
+                         "If there is an error in the request, you will return the error code and the error message"
+                         "and explicitly say there was an error.",
             tools=[fetch_image_from_street_view],
         ),
     )
