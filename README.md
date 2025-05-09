@@ -65,6 +65,7 @@ pip install -r requirements-agent.txt
 python -m source.agent --prompt "explore the southern suburbs of Athens"
 ```
 
+7. The resulting photos will be saved under `source/the_photos/`.
 
 ### v2 - Google Colab
 [![Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Kostis-S-Z/lonelymachine/blob/main/notebook.ipynb) 
