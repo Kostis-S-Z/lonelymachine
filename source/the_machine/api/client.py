@@ -31,7 +31,7 @@ def get_credentials():
 
 
 def fetch_image_from_location(
-    location: str, key: str, secret: str, params: dict, filename: str
+    location: str, key: str, secret: str, params: dict, filename: str, manual_check: bool = True
 ):
     """
     Construct and send a request to the Street View API.
@@ -42,6 +42,7 @@ def fetch_image_from_location(
         key (str): Google API key.
         secret (str): Google API signing secret.
         params (dict): Parameters for the Street View API request.
+        manual_check (bool): If True, requires user confirmation before sending the request.
 
     Returns:
         None: The image is saved to disk if the request is successful.
@@ -59,7 +60,10 @@ def fetch_image_from_location(
     signed_url = sign_url(input_url=url_request, secret=secret)
 
     print("Sending request:", signed_url)
-    ans = input("Yes? (y/n) ")
+    if manual_check:
+        ans = input("Yes? (y/n) ")
+    else:
+        ans = "y"
     if ans.lower() == "y":
         try:
             response = requests.get(signed_url)
@@ -72,7 +76,7 @@ def fetch_image_from_location(
 
 
 def fetch_images(
-    input_file: str, params: dict = DEFAULT_API_PARAMS, save_dir: str = DEFAULT_SAVE_DIR
+    input_file: str, params: dict = DEFAULT_API_PARAMS, save_dir: str = DEFAULT_SAVE_DIR, manual_check: bool = True
 ):
     """
     Fetch Street View photos for locations specified in a CSV file.
@@ -81,6 +85,7 @@ def fetch_images(
         input_file (str): Path to the CSV file containing location data.
         params (dict, optional): API parameters for the request; defaults to DEFAULT_API_PARAMS.
         save_dir (str): The directory where the fetched images will be saved.
+        manual_check (bool): If True, requires user confirmation before sending the request.
     """
     key, secret = get_credentials()
 
@@ -96,6 +101,7 @@ def fetch_images(
             secret=secret,
             params=params,
             filename=os.path.join(save_dir, filename),
+            manual_check=manual_check
         )
         if index + 1 >= params.get("n_addresses", 1):
             break
