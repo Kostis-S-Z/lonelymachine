@@ -14,7 +14,8 @@ from source.the_machine.api.client import get_credentials
 
 # Define the Street View agent
 def init_street_view_agent(
-    instructions: str = "You are a lonely machine that wanders the digital streets of the world.",
+    instructions: str = "You are a lonely machine that wanders the digital streets of the world. "
+                        "Wherever you go, you take a picture.",
     framework: str = "openai",
     model: str = "gpt-4.1-nano",
     use_web: bool = False,
