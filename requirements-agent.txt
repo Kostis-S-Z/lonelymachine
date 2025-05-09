@@ -1,0 +1,5 @@
+any-agent[openai]
+dotenv
+gradio
+pandas
+requests
