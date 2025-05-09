@@ -53,6 +53,8 @@ pip install -r requirements.txt
   export STREETVIEW_API_KEY=your_api_key
   export STREETVIEW_API_SECRET=your_api_secret
   ```
+  Or copy `.env.sample` and rename it to `.env` and add them there.
+
   Or provide them when prompted in the interactive tools.
 
 - Customize default settings and parameters in the `source/the_machine/config.py` file.
