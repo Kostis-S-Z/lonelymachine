@@ -2,8 +2,7 @@ import os
 
 STREETVIEW_API_URL = "https://maps.googleapis.com/maps/api/streetview"
 
-API_KEY_ENV = "STREETVIEW_API_KEY"
-API_SECRET_ENV = "STREETVIEW_API_SECRET"
+
 
 DEFAULT_CONFIG_DIR = os.path.join(os.path.expanduser("~"), ".streetview_photographer")
 DEFAULT_CONFIG_FILE = os.path.join(DEFAULT_CONFIG_DIR, "config.ini")
