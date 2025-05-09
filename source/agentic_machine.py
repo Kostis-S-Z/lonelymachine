@@ -16,17 +16,8 @@ def init_street_view_agent(
         agent_framework=framework,
         agent_config=AgentConfig(
             model_id=model,
-            instructions="You are an agent that fetches images from Google Street View API. The user will provide a "
-            "location and you will have to first find the coordinates of that location in the format "
-            "XX.XXXXXX, YY.YYYYYY (for example 38.059576,23.737887) and then fetch an image from the "
-            "Google Street View API. If the user asks for multiple photos from multiple place the you "
-            "will return more than one image, for each one of the places. "
-            "If the user asks for certain parameters, you will have to "
-            "use them. If the user does not provide any parameters you will have to use the default ones. "
-            "The default parameters are: size=640x640, fov=120, heading=0, pitch=10, radius=50."
-            "If there is an error in the request, you will return the error code and the error message"
-            "and explicitly say there was an error.",
-            tools=[fetch_image_from_street_view],
+            instructions=instructions,
+            tools=tools,
         ),
     )
 
