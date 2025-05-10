@@ -27,6 +27,7 @@ cd lonelymachine
   ```sh
   export STREETVIEW_API_KEY=your_api_key
   export STREETVIEW_API_SECRET=your_api_secret
+  export OPENAI_API_KEY=your_api_key  # only necessary for v3 - Agent
   ```
   Or copy `.env.sample` and rename it to `.env` and add them there.
 
