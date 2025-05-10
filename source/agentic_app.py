@@ -4,7 +4,7 @@ from typing import Tuple, List
 import gradio as gr
 from any_agent import AgentTrace, AnyAgent
 
-from source.agentic_machine import init_street_view_agent
+from source.agentic_machine import init_street_view_agent, get_photo_from_street_view
 
 
 default_instructions = (
@@ -18,7 +18,7 @@ default_use_web = False
 def _get_photo_paths_from_agent_trace(agent_trace: AgentTrace) -> List[str]:
     paths = []
     for tool_call in agent_trace.spans:
-        if tool_call.name == "fetch_image_from_street_view":
+        if tool_call.name == get_photo_from_street_view.__name__:
             paths.append(tool_call.attributes["output.value"])
 
     return list(set(paths))  # make sure there are no duplicates
