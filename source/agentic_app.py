@@ -3,13 +3,14 @@ from typing import Tuple, List
 
 import gradio as gr
 from any_agent import AgentTrace, AnyAgent
-import opentelemetry.trace as trace
 
 from source.agentic_machine import init_street_view_agent
 
 
-default_instructions = ("You are a lonely machine that wanders the streets of the world. "
-                        "Wherever you go, you take a picture.")
+default_instructions = (
+    "You are a lonely machine that wanders the streets of the world. "
+    "Wherever you go, you take a picture."
+)
 default_model = "gpt-4.1-mini"
 default_use_web = False
 
@@ -23,7 +24,10 @@ def _get_photo_paths_from_agent_trace(agent_trace: AgentTrace) -> List[str]:
     return list(set(paths))  # make sure there are no duplicates
 
 
-def query_agent(agent: AnyAgent, user_input: str) -> Tuple[AnyAgent | None, List[str] | None, str]:
+def query_agent(
+    agent: AnyAgent, user_input: str
+) -> Tuple[AnyAgent | None, List[str] | None, str]:
+    # Initialize agent for the first time
     if not agent:
         agent, _ = initialize_agent()
 
@@ -31,27 +35,30 @@ def query_agent(agent: AnyAgent, user_input: str) -> Tuple[AnyAgent | None, List
 
     photo_paths = _get_photo_paths_from_agent_trace(agent_trace)
 
+    print(f"Fetched these photos: {photo_paths}")
+
     return agent, photo_paths, agent_trace.final_output
 
 
-def initialize_agent(instructions: str = default_instructions, model: str = default_model, use_web: bool = default_use_web):
-    if not trace.get_tracer_provider():
-        from opentelemetry.sdk.trace import TracerProvider
-        from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
-
-        tracer_provider = TracerProvider()
-        span_processor = BatchSpanProcessor(ConsoleSpanExporter())
-        tracer_provider.add_span_processor(span_processor)
-        trace.set_tracer_provider(tracer_provider)
+def initialize_agent(
+    agent: AnyAgent | None = None,
+    instructions: str = default_instructions,
+    model: str = default_model,
+    use_web: bool = default_use_web,
+):
+    # If the agent was already initialized, reset it
+    if agent:
+        agent.exit()
 
     new_loop = asyncio.new_event_loop()
     asyncio.set_event_loop(new_loop)
     updated_agent = init_street_view_agent(
-            instructions=instructions,
-            model=model,
-            use_web=use_web,
-        )
+        instructions=instructions,
+        model=model,
+        use_web=use_web,
+    )
     return updated_agent, "The Machine has been updated."
+
 
 def gradio_app():
     with gr.Blocks() as app:
@@ -84,10 +91,9 @@ def gradio_app():
 
             gr.Button("Save").click(
                 initialize_agent,
-                inputs=[instructions, model, use_web],
+                inputs=[agent, instructions, model, use_web],
                 outputs=[agent, agent_status],
             )
-
 
         input_text = gr.Textbox(
             label="Where should I wander?",
