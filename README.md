@@ -1,20 +1,12 @@
 # The Lonely Machine
 
-As part of The Lonely Machine, a _curious_, auxiliary application was created. This app provides an interface to the user to communicate with a bot (i.e "an autonomous program on the internet that can interact with systems or users") that explores and _photographs_ streets around the world. This bot has various degrees of autonomy in regards to what and how it will capture the scene. On the most explicit and _human_-curated level, the user inputs the exact coordinates of the scene and can tune the scenography to their liking by adjusting various variables of the photograph, such as the depth of field or the angle of the camera in the x,y,z axis, as well as the pixel dimensions or the number of photos to capture. On the most abstract, _autonomous_ and (_ro_)_bot_-curated level, the user inputs the coordinates of a bounding box on a map from which within the bot is allowed to take photos, either in a random, exploratory fashion or in a structured, evenly distributed within the space manner.
-
-In a bit more technical terms, this application is written in Python and combines common data science practices with the use of Google's Street View API to create a local dataset of PNG images and a CSV spreadsheet to register the coordinates of the photos. 
+As part of The Lonely Machine, a curious and auxiliary application has evolved over several iterations. This app provides users with an interface to communicate with a bot—an autonomous program capable of exploring and photographing streets around the world. This codebase consists of multiple implementations and iterations of the machine. Initially, on the most explicit and human-curated method, a human would input exact coordinates and fine-tune parameters such as depth of field, camera orientation (x, y, z angles), pixel dimensions, and number of photos, and the machine would return the photo from that location. On the most abstract, bot-driven end, the user could set a bounding box on a map within which the bot would autonomously select and photograph locations, either randomly or in a structured, evenly distributed manner. Over time, this interface / communication has become increasingly human-friendly while at the same time increasing the machine's autonomy. In its latest version, the machine has the capacity for self-directed exploration and planning on the internet, based simply on a natural language human prompt of a few words.
 
 In its first iteration [v1 of 2020-2021], the user interacts with this software through an interactive dialog in the command line.
 
 In its second iteration [v2 of 2023-2024], a Google Colab notebook is published that provides the user a more user-friendly, graphical interface.
 
 In its third iteration [v3 of 2025], the lonely machine has been re-implemented as an [AI agent](https://huggingface.co/docs/smolagents/en/conceptual_guides/intro_agents). It can autonomously explore the world and take photos, without any human planning, simply by providing a prompt in natural language, e.g. "explore the southern suburbs of Athens" 
-
-TL;DR this bot can:
-- Generate CSV files with location coordinates.
-- Fetch Street View images based on provided locations.
-- Be used as an interactive CLI tool (`interact.py`).
-- Be used as an interactive notebook for Google Colab.
 
 
 ## Start here...
