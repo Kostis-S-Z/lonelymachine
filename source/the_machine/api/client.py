@@ -31,7 +31,12 @@ def get_credentials():
 
 
 def fetch_image_from_location(
-    location: str, key: str, secret: str, params: dict, filename: str, manual_check: bool = True
+    location: str,
+    key: str,
+    secret: str,
+    params: dict,
+    filename: str,
+    manual_check: bool = True,
 ):
     """
     Construct and send a request to the Street View API.
@@ -76,7 +81,10 @@ def fetch_image_from_location(
 
 
 def fetch_images(
-    input_file: str, params: dict = DEFAULT_API_PARAMS, save_dir: str = DEFAULT_SAVE_DIR, manual_check: bool = True
+    input_file: str,
+    params: dict = DEFAULT_API_PARAMS,
+    save_dir: str = DEFAULT_SAVE_DIR,
+    manual_check: bool = True,
 ):
     """
     Fetch Street View photos for locations specified in a CSV file.
@@ -102,7 +110,7 @@ def fetch_images(
             secret=secret,
             params=params,
             filename=os.path.join(save_dir, filename),
-            manual_check=manual_check
+            manual_check=manual_check,
         )
         photo_paths.append(filename)
         if index + 1 >= params.get("n_addresses", 1):
