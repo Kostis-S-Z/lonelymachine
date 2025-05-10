@@ -20,7 +20,7 @@ def init_street_view_agent(
     model: str = "gpt-4.1-nano",
     use_web: bool = False,
 ) -> AnyAgent:
-    tools = [get_area_details_from_name, fetch_image_from_street_view]
+    tools = [get_area_details_from_name, get_photo_from_street_view]
     if use_web:
         tools += [search_web, visit_webpage]
     return AnyAgent.create(
@@ -78,7 +78,7 @@ def get_area_details_from_name(area_name: str) -> list[dict]:
     return response_json
 
 
-def fetch_image_from_street_view(
+def get_photo_from_street_view(
     coordinates: str, size: str, fov: int, heading: int, radius: int = 300
 ) -> str:
     """

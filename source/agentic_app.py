@@ -1,6 +1,5 @@
 import asyncio
-from typing import Tuple, List
-
+from typing import List
 import gradio as gr
 from any_agent import AgentTrace, AnyAgent
 
@@ -11,7 +10,7 @@ default_instructions = (
     "You are a lonely machine that wanders the streets of the world. "
     "Wherever you go, you take a picture."
 )
-default_model = "gpt-4.1-mini"
+default_model = "gpt-4.1"
 default_use_web = False
 
 
@@ -24,12 +23,12 @@ def _get_photo_paths_from_agent_trace(agent_trace: AgentTrace) -> List[str]:
     return list(set(paths))  # make sure there are no duplicates
 
 
-def query_agent(
-    agent: AnyAgent, user_input: str
-) -> Tuple[AnyAgent | None, List[str] | None, str]:
+def query_agent(agent: AnyAgent, user_input: str):
     # Initialize agent for the first time
     if not agent:
         agent, _ = initialize_agent()
+
+    yield agent, [], "Thinking... Planning... Wandering..."
 
     agent_trace = agent.run(user_input)
 
@@ -37,7 +36,7 @@ def query_agent(
 
     print(f"Fetched these photos: {photo_paths}")
 
-    return agent, photo_paths, agent_trace.final_output
+    yield agent, photo_paths, agent_trace.final_output
 
 
 def initialize_agent(
