@@ -15,7 +15,7 @@ from source.the_machine.api.client import get_credentials
 # Define the Street View agent
 def init_street_view_agent(
     instructions: str = "You are a lonely machine that wanders the digital streets of the world. "
-                        "Wherever you go, you take a picture.",
+    "Wherever you go, you take a picture.",
     framework: str = "openai",
     model: str = "gpt-4.1-nano",
     use_web: bool = False,
@@ -79,7 +79,7 @@ def get_area_details_from_name(area_name: str) -> list[dict]:
 
 
 def fetch_image_from_street_view(
-    coordinates: str, size: str, fov: int, heading: int, radius: int
+    coordinates: str, size: str, fov: int, heading: int, radius: int = 300
 ) -> str:
     """
     Given some coordinates in the format of XX.XXXXXX, YY.YYYYYY and other parameters fetch a photo
@@ -114,9 +114,9 @@ def fetch_image_from_street_view(
 
     if response.status_code == 200:
         coordinates = coordinates.replace(",", "_").replace(".", "_")
-        timestamp = datetime.now().strftime("%d%m%Y_%H%M%S")
-        uid = str(uuid.uuid4())[:3]
-        filename = f"streetview_{timestamp}_{coordinates}_{uid}.jpg"
+        timestamp = datetime.now().strftime("%d%m%Y")
+        uid = str(uuid.uuid4())[:2]
+        filename = f"img_{timestamp}_{coordinates}_{uid}.jpg"
         full_path = output_path / filename
         with open(full_path, "wb") as file:
             file.write(response.content)
@@ -139,8 +139,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     r = get_area_details_from_name("elefsina")
-    print(r)
-    exit()
 
     agent = init_street_view_agent()
     agent_trace = agent.run(args.prompt)
